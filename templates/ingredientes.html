@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Lista de Ingredientes</h1>
+{% if ingredientes %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Calorías</th>
+                <th>Inventario</th>
+                <th>Vegetariano</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingrediente in ingredientes %}
+                <tr>
+                    <td>{{ ingrediente.nombre }}</td>
+                    <td>${{ ingrediente.precio }}</td>
+                    <td>{{ ingrediente.calorias }} cal</td>
+                    <td>{{ ingrediente.inventario }}</td>
+                    <td>{{ 'Sí' if ingrediente.es_vegetariano else 'No' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay ingredientes disponibles.</p>
+{% endif %}
+{% endblock %}
