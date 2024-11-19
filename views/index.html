@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Productos Disponibles</h1>
+{% if productos %}
+<div class="row">
+    {% for producto in productos %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre }} </h5>
+                <h6 class="card-text">Tipo Producto: {{ producto.tipo }}</h6>
+                <p class="card-text">Precio: ${{ producto.precio_publico }}</p>
+                <p class="card-text">Costo de Producción: ${{ producto.calcular_costo() }}</p>
+                <p class="card-text">Rentabilidad: ${{ producto.calcular_rentabilidad() }}</p>
+                <p class="card-text">Calorias: {{ producto.calcular_calorias() }}</p>
+                <!-- Botón para abrir el modal de edición -->
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#editModal{{ producto.id }}">
+                    Editar
+                </button>
+
+                <!-- Botón para eliminar -->
+                <form action="{{ url_for('main.eliminar_producto', producto_id=producto.id) }}" method="post"
+                    style="display: inline;"
+                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+
+                <!-- Modal de edición -->
+                <div class="modal fade" id="editModal{{ producto.id }}" tabindex="-1"
+                    aria-labelledby="editModalLabel{{ producto.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{{ url_for('main.editar_producto', producto_id=producto.id) }}"
+                                method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel{{ producto.id }}">Editar Producto</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="nombre{{ producto.id }}" class="form-label">Nombre del
+                                            Producto</label>
+                                        <input type="text" class="form-control" id="nombre{{ producto.id }}"
+                                            name="nombre" value="{{ producto.nombre }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="precio{{ producto.id }}" class="form-label">Precio Público</label>
+                                        <input type="number" class="form-control" id="precio{{ producto.id }}"
+                                            name="precio" step="0.01" value="{{ producto.precio_publico }}" required>
+                                    </div>
+                                    <!-- Aquí puedes agregar más campos si es necesario -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <h3>Producto Mas rentable: {{mas_rentable}}</h3>
+    <h3>Ventas del Dia: ${{ventas_dia}}</h3>
+</div>
+{% else %}
+
+<p>No hay productos disponibles.</p>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mt-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% endblock %}

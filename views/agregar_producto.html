@@ -14,13 +14,21 @@
     </div>
 
     <div class="mb-3">
+        <label for="tipo" class="form-label">Tipo Producto</label>
+        <input type="text" class="form-control" id="tipo" name="tipo" placeholder="Ej. copa o malteada" required>
+    </div>
+
+    <div class="mb-3">
         <label for="ingredientes" class="form-label">Selecciona los Ingredientes</label>
-        <select multiple class="form-select" id="ingredientes" name="ingredientes">
+
             {% for ingrediente in ingredientes %}
-                <option value="{{ ingrediente.id }}">{{ ingrediente.nombre }} - ${{ ingrediente.precio }}</option>
+            <div>
+                <label>
+                    <input type="checkbox" id="ingredientes" name="ingredientes" value="{{ ingrediente.id }}">{{ ingrediente.nombre }} - ${{ ingrediente.precio }}
+                </label>
+            </div>
             {% endfor %}
-        </select>
-        <small class="form-text text-muted">Usa Ctrl (Cmd en Mac) para seleccionar múltiples ingredientes.</small>
+   
     </div>
     
     <button type="submit" class="btn btn-primary">Agregar Producto</button>

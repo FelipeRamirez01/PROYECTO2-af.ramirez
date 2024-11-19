@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Lista de Ingredientes</h1>
+{% if ingredientes %}
+    <table class="table" >
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Calorías</th>
+                <th>Inventario</th>
+                <th>Vegetariano</th>
+                <th>Es Sano</th>
+                <th>Tipo</th>
+                <th>Abastecer</th>
+                <th>Renovar</th>
+            </tr>
+        </thead>
+        <tbody method="post">
+            {% for ingrediente in ingredientes %}
+                <tr>
+                    <td>{{ ingrediente.nombre }}</td>
+                    <td>${{ ingrediente.precio }}</td>
+                    <td>{{ ingrediente.calorias }} cal</td>
+                    <td>{{ ingrediente.inventario }}</td>
+                    <td>{{ 'Sí' if ingrediente.es_vegetariano else 'No' }}</td>
+                    <td>{{ 'Sí' if ingrediente.es_sano() else 'No' }}</td>
+                    <td>{{ingrediente.tipo}}</td>
+                    <!-- Botón para abastecer -->
+                     <td>
+                    <form action="{{ url_for('main.abastecer_ingrediente', ingrediente_id=ingrediente.id) }}"  method="post" style="display: inline;">
+                        <button  type="submit" class="btn btn-success">Abastecer</button>
+                    </form>
+                    </td>
+                    <td>
+                    <!-- Botón para renovar inventario -->
+                    <form action="{{ url_for('main.renovar_ingrediente', ingrediente_id=ingrediente.id) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-warning btn-sm">Renovar Inventario</button>
+                    </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay ingredientes disponibles.</p>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mt-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% endblock %}
+
